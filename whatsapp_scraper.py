@@ -10,6 +10,7 @@ msgTime = []
 msgSender = []
 msg = []
  
+# TODO: make the script open any text file and/or loop over each text fil
 
 # Opens file and loops over each row, looking for dare, time, sender and message
 with open('whatsapp_chat.txt', 'r', encoding='utf-8') as f:
@@ -78,3 +79,4 @@ with open('whatsapp_chat.csv', 'r', encoding='utf-8') as f:
         ws.append(row)
 wb.save('whatsapp_chat.xlsx')
 
+# TODO: create folder for each txt file, with a input/output folders
