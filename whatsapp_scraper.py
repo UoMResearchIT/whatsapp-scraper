@@ -76,13 +76,14 @@ for filename in os.listdir(cwd):
         
         df = pd.DataFrame(list(zip(msgDate, msgTime, msgSender, msg)),
                         columns=['Date', 'Time', 'Sender', 'Message'])
+       
 
         # get filename minus extension                
-        new_filename = os.path.splitext(filename)[0]        
+        split_filename = os.path.splitext(filename)[0]  
 
-        # use the filename with new extensions
-        csv_filename = new_filename + '.csv'
-        excel_filename = new_filename + '.xlsx'
+        # use the split filename with new extensions
+        csv_filename = split_filename + '.csv'
+        excel_filename = split_filename + '.xlsx'
 
         # datafram saved to CSV
         df.to_csv(csv_filename, index=False)
