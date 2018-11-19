@@ -76,18 +76,24 @@ for filename in os.listdir(cwd):
         
         df = pd.DataFrame(list(zip(msgDate, msgTime, msgSender, msg)),
                         columns=['Date', 'Time', 'Sender', 'Message'])
-        
-        # datafram saved to CSV
-        df.to_csv('whatsapp_chat.csv', index=False)
 
-        # CSV coverted to Excel format
+        # get filename minus extension                
+        new_filename = os.path.splitext(filename)[0]        
+
+        # use the filename with new extensions
+        csv_filename = new_filename + '.csv'
+        excel_filename = new_filename + '.xlsx'
+
+        # datafram saved to CSV
+        df.to_csv(csv_filename, index=False)
+
+        # CSV coverted to Excel format (opens CSV and converst to xlsx format)
         wb = Workbook()
         ws = wb.active
-        with open('whatsapp_chat.csv', 'r', encoding='utf-8') as f:
+        with open(csv_filename, 'r', encoding='utf-8') as f:
             for row in csv.reader(f):
                 ws.append(row)
-        wb.save('whatsapp_chat.xlsx')
-
+        wb.save(excel_filename)
     else:
         continue
 
