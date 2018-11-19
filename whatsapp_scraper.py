@@ -106,5 +106,3 @@ for filename in os.listdir(cwd):
 
     else:
         continue
-
-# TODO: create folder for each txt file, with a input/output folders
