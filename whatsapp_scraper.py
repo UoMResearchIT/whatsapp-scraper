@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 import os
+import shutil
 from openpyxl import Workbook
 import csv
  
@@ -16,9 +17,10 @@ cwd = os.getcwd()
 
 # loop over all files in CWD
 for filename in os.listdir(cwd):
+
     
     # search for all text files that aren't the requirements file
-    if filename != ("requirements.txt") and filename.endswith(".txt") : 
+    if filename != ("requirements.txt") and filename.endswith(".txt"):
 
         # Opens file and loops over each row, looking for dare, time, sender and message
         with open(filename, 'r', encoding='utf-8') as f:
@@ -95,10 +97,14 @@ for filename in os.listdir(cwd):
             for row in csv.reader(f):
                 ws.append(row)
         wb.save(excel_filename)
+
+        os.makedirs(split_filename)
+        shutil.move(filename, split_filename)
+        shutil.move(csv_filename, split_filename)
+        shutil.move(excel_filename, split_filename)
+
+
     else:
         continue
-
-
-# TODO: put filename in outputted files
 
 # TODO: create folder for each txt file, with a input/output folders
