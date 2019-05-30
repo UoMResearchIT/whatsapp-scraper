@@ -11,13 +11,13 @@ msgDate = []
 msgTime = []
 msgSender = []
 msg = []
+msgNumberList = []
  
 # Get current working directory
 cwd = os.getcwd()
 
 # loop over all files in CWD
 for filename in os.listdir(cwd):
-
     
     # search for all text files that aren't the requirements file
     if filename != ("requirements.txt") and filename.endswith(".txt"):
@@ -25,16 +25,21 @@ for filename in os.listdir(cwd):
         # Opens file and loops over each row, looking for dare, time, sender and message
         with open(filename, 'r', encoding='utf-8') as f:
         
+            # Calculates number of rows needed to loop over
             test = f.readlines()
-        
             start = 1
-            numItems = len(test)
-        
+            numItems = len(test)    
             want = range(start, numItems)
-        
+    
+            msgNumber = 1
+
             for row in want:
+
+                msgNumberList.append(str(msgNumber))
+
+                msgNumber += 1
         
-            # set Date Pattern
+                # set Date Pattern
                 datePattern = '(\d+/\d+/\d+)'
         
                 try:
@@ -76,8 +81,8 @@ for filename in os.listdir(cwd):
 
                 # pandas dataframe created from the lists
         
-        df = pd.DataFrame(list(zip(msgDate, msgTime, msgSender, msg)),
-                        columns=['Date', 'Time', 'Sender', 'Message'])
+        df = pd.DataFrame(list(zip(msgNumberList, msgDate, msgTime, msgSender, msg)),
+                        columns=['Message Number', 'Date', 'Time', 'Sender', 'Message'])
        
 
         # get filename minus extension                
