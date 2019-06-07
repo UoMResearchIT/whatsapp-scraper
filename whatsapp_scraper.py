@@ -2,17 +2,9 @@ import pandas as pd
 import re
 import os
 import shutil
-from openpyxl import Workbook
 import csv
- 
+import datetime
 
-# Lists for WhatsApp data to be stored, date, time, sender, and message
-msgDate = []
-msgTime = []
-msgSender = []
-msg = []
-msgNumberList = []
- 
 # Get current working directory
 cwd = os.getcwd()
 
@@ -22,92 +14,85 @@ for filename in os.listdir(cwd):
     # search for all text files that aren't the requirements file
     if filename != ("requirements.txt") and filename.endswith(".txt"):
 
-        # Opens file and loops over each row, looking for dare, time, sender and message
-        with open(filename, 'r', encoding='utf-8') as f:
-        
-            # Calculates number of rows needed to loop over
+        # open the text file
+        with open(filename, "r", encoding='utf-8') as f:   
+            
             test = f.readlines()
             start = 1
-            numItems = len(test)    
-            want = range(start, numItems)
-    
-            msgNumber = 1
+            num_items = len(test)    
+            want = range(start, num_items)
 
+            # List where the datetime, sender, message and message number go
+            msg_date_time = []
+            msg_sender = []
+            msg = []
+            msg_number_list = []
+            
             for row in want:
 
-                msgNumberList.append(str(msgNumber))
+                # try to find the date, if can't then a message has continued from previous line.
+                # this is then appended to previous message by finding it in the msg list and concantonbating it    
+                try:
+                    date = re.search(r'(\d+/\d+/\d+), (\d+:\d+)', test[row]).group(0)
+                except AttributeError:
+                    new_message = msg[-1] + " " + test[row]
+                    del msg[-1]
+                    msg.append(new_message)
+                    continue
 
-                msgNumber += 1
-        
-                # set Date Pattern
-                datePattern = '(\d+/\d+/\d+)'
-        
+                # Tries sender and creates a blank
                 try:
-                    date = re.search(datePattern, test[row]).group(0)
-                except AttributeError:
-                    date = "No Date"
-        
-                msgDate.append(date)
-        
-                # Set time pattern
-                timePattern = '\d+:\d+'
-        
+                    sender = re.search(r'(?s)(?<=-\s).*?(?=:)',test[row]).group(0).replace("- ", "")
+                except:
+                    sender = " "        
+
+                # Looks for message and creates a "No Message" this helps filter out the admin messages, eg. this person changed group icon etc
                 try:
-                    time = re.search(timePattern, test[row]).group(0)
-                except AttributeError:
-                    time = "No Time"
-        
-                msgTime.append(time)
-        
-                # Set person pattern (every value between - and :)
-                personPattern = '(?s)(?<=-\s).*?(?=:)'
-        
-                try:
-                    person = re.search(personPattern, test[row]).group(0).replace("- ", "")
-                except AttributeError:
-                    person = "No Person"
-        
-                msgSender.append(person)
-        
-                # set message pattern
-                messagePattern = '(:\s).*'    
-        
-                try:
-                    message = re.search(messagePattern, test[row]).group(0).replace(": ", "")
-                except AttributeError:
-                    message = "No message"
-        
+                    message = re.search(r"(:\s).*[\d+/\d+/\d+]*", test[row]).group(0).replace(": ", "")
+                except:
+                    message = "No Message"
+
+                msg_date_time.append(date)
+
+                msg_sender.append(sender)
+
                 msg.append(message)
 
-                # pandas dataframe created from the lists
-        
-        df = pd.DataFrame(list(zip(msgNumberList, msgDate, msgTime, msgSender, msg)),
-                        columns=['Message Number', 'Date', 'Time', 'Sender', 'Message'])
-       
+
+        # Creates a pandas dataframe
+        df = pd.DataFrame(list(zip(msg_date_time, msg_sender, msg)),
+                            columns=['Date Time','Sender', 'Message'])
+
+        # Drops all rows where the message is "No Message"
+        df = df[~df.Message.str.contains("No Message")]
+
+        # Create a message number column
+        msg_number_list
+        loop_num = len(df.index)
+        msg_number = 1
+        for number in range(loop_num) :
+            msg_number_list.append(str(msg_number))
+            msg_number += 1
+
+        # Creates new df with message number column
+        df = df.assign(message_number = msg_number_list)
+
+        # Reanmes column
+        df = df.rename({'message_number': 'Message Number'}, axis=1)
+
+        # Reorders columns
+        df = df[['Message Number', 'Date Time', 'Sender', 'Message']]
 
         # get filename minus extension                
         split_filename = os.path.splitext(filename)[0]  
 
         # use the split filename with new extensions
         csv_filename = split_filename + '.csv'
-        excel_filename = split_filename + '.xlsx'
 
-        # datafram saved to CSV
+        # dataframe saved to CSV
         df.to_csv(csv_filename, index=False)
 
-        # CSV coverted to Excel format (opens CSV and converst to xlsx format)
-        wb = Workbook()
-        ws = wb.active
-        with open(csv_filename, 'r', encoding='utf-8') as f:
-            for row in csv.reader(f):
-                ws.append(row)
-        wb.save(excel_filename)
-
+        # makes a new directory and puts the source and outputs file in it
         os.makedirs(split_filename)
         shutil.move(filename, split_filename)
         shutil.move(csv_filename, split_filename)
-        shutil.move(excel_filename, split_filename)
-
-
-    else:
-        continue
