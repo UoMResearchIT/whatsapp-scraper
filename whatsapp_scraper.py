@@ -4,8 +4,7 @@ import os
 import shutil
 import csv
 import datetime
-from whatsapp_functions import legacy_whatsapp
-from whatsapp_functions import new_whatsapp
+
 
 # Get current working directory
 cwd = os.getcwd()
