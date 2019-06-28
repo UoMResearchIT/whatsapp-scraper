@@ -4,6 +4,8 @@ import os
 import shutil
 import csv
 import datetime
+from whatsapp_functions import legacy_whatsapp
+from whatsapp_functions import new_whatsapp
 
 # Get current working directory
 cwd = os.getcwd()
@@ -16,48 +18,91 @@ for filename in os.listdir(cwd):
 
         # open the text file
         with open(filename, "r", encoding='utf-8') as f:   
-            
+
+            # Checks the first line to see if its an old WhatsAPP message or new one.
+            first_line = f.readline()
+
             test = f.readlines()
             start = 1
             num_items = len(test)    
             want = range(start, num_items)
-
+            
             # List where the datetime, sender, message and message number go
             msg_date_time = []
             msg_sender = []
             msg = []
             msg_number_list = []
-            
-            for row in want:
 
-                # try to find the date, if can't then a message has continued from previous line.
-                # this is then appended to previous message by finding it in the msg list and concantonbating it    
-                try:
-                    date = re.search(r'(\d+/\d+/\d+), (\d+:\d+)', test[row]).group(0)
-                except AttributeError:
-                    new_message = msg[-1] + " " + test[row]
-                    del msg[-1]
-                    msg.append(new_message)
-                    continue
+            # checks first charcater of firstline, if its a opening of square brackets, 
+            # it will run new whatsApp loop, otherwise it will run the old one.
+            if first_line[0] == '[':
+                
+                for row in want:
+                    try:
+                        date = re.search(r'(.\d+/\d+/\d+), (\d+:\d+:\d\d.)', test[row]).group(0)
+                        
+                        #gets rid of brackets for nicer CSV formatting
+                        date = re.sub(r'\[', '', date)
+                        date = re.sub(r'\]', '', date)   
+                    except AttributeError:
+                        new_message = msg[-1] + " " + test[row]
+                        del msg[-1]
+                        msg.append(new_message)
+                        continue     
 
-                # Tries sender and creates a blank
-                try:
-                    sender = re.search(r'(?s)(?<=-\s).*?(?=:)',test[row]).group(0).replace("- ", "")
-                except:
-                    sender = " "        
+                    # Looks for message and creates a "No Message" this helps filter out the admin messages, eg. this person changed group icon etc
+                    try:
+                        message = re.search(r"(:\s).*[\d+/\d+/\d+]*", test[row]).group(0).replace(": ", "")
+                    except:
+                        message = "No Message"
 
-                # Looks for message and creates a "No Message" this helps filter out the admin messages, eg. this person changed group icon etc
-                try:
-                    message = re.search(r"(:\s).*[\d+/\d+/\d+]*", test[row]).group(0).replace(": ", "")
-                except:
-                    message = "No Message"
+                    try:
+                        # Finds the sender by deleting the message and date/time from the row.
+                        row = test[row]
+                        sender = re.sub(r"(.\d+/\d+/\d+), (\d+:\d+:\d\d.)", "", row)
+                        sender = re.sub(r":.*", "", sender)
+                        
+                    except:
+                        sender = " "
 
-                msg_date_time.append(date)
 
-                msg_sender.append(sender)
+                    msg_date_time.append(str(date))
 
-                msg.append(message)
+                    msg_sender.append(sender)
 
+                    msg.append(message)
+
+            else:
+
+                for row in want:
+
+                    # try to find the date, if can't then a message has continued from previous line.
+                    # this is then appended to previous message by finding it in the msg list and concantonbating it    
+                    try:
+                        date = re.search(r'(\d+/\d+/\d+), (\d+:\d+)', test[row]).group(0)
+                    except AttributeError:
+                        new_message = msg[-1] + " " + test[row]
+                        del msg[-1]
+                        msg.append(new_message)
+                        continue
+
+                    # Tries sender and creates a blank
+                    try:
+                        sender = re.search(r'(?s)(?<=-\s).*?(?=:)',test[row]).group(0).replace("- ", "")
+                    except:
+                        sender = " "        
+
+                    # Looks for message and creates a "No Message" this helps filter out the admin messages, eg. this person changed group icon etc
+                    try:
+                        message = re.search(r"(:\s).*[\d+/\d+/\d+]*", test[row]).group(0).replace(": ", "")
+                    except:
+                        message = "No Message"
+
+                    msg_date_time.append(date)
+
+                    msg_sender.append(sender)
+                    
+                    msg.append(message)
 
         # Creates a pandas dataframe
         df = pd.DataFrame(list(zip(msg_date_time, msg_sender, msg)),
@@ -96,3 +141,4 @@ for filename in os.listdir(cwd):
         os.makedirs(split_filename)
         shutil.move(filename, split_filename)
         shutil.move(csv_filename, split_filename)
+
