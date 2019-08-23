@@ -1,0 +1,9 @@
+name: whatsapp-scraper-environment
+
+dependencies:
+  - python=3.7
+  - pandas
+  - numpy
+  - python-dateutil
+  - pytz
+  - six
