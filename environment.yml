@@ -1,4 +1,4 @@
-name: whatsappcondaenv
+name: whatsapp-conda-env
 channels:
   - anaconda-fusion
   - defaults

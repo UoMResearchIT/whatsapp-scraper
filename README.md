@@ -30,7 +30,7 @@ A script that takes WhatsApp messages in .txt format, pareses the DateTime, Send
 
 3. Click the 'Import' button at the bottom.
 
-4. Click the folder button next to "Specification File'. Choose the environment.yml. That's in the whatsapp_scraper_master directory.
+4. Click the folder button next to "Specification File'. Choose the 'environment.yml' file that's in the whatsapp_scraper_master directory.
 
 5. Click 'Import'
 
