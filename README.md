@@ -8,42 +8,48 @@ A script that takes WhatsApp messages in .txt format, pareses the DateTime, Send
 
 ### **1. Downloading the Files**
 
-Head to - https://github.com/UoMResearchIT/whatsapp-scraper
+1. Head to - https://github.com/UoMResearchIT/whatsapp-scraper
 
-Click 'Clone or Download', select 'Download as .ZIP'
+2. Click 'Clone or Download', select 'Download as .ZIP'
 
-Unzip the file, put the 'whatsapp-scraper-master' into your 'Documents' directory.
+3. Unzip the file, put the 'whatsapp-scraper-master' into your 'Documents' directory.
 
 ### **2. Python Set-up**
 
-Download Anaconda, a Python distribution, here - https://www.anaconda.com/distribution/
+1. Download Anaconda, a Python distribution, here - https://www.anaconda.com/distribution/
 
-Choose your OS, and download the the 'Python 3.7 version'.
+2. Choose your OS, and download the the 'Python 3.7 version'.
 
-Once it has finished downloading, install it, choosing the default options.
+3. Once it has finished downloading, install it, choosing the default options.
 
 ### **3. Virtual Environment Set-up**
 
-Open the 'Anaconda Navigator" application.
+1. Open the 'Anaconda Navigator" application.
 
-Click the 'Environments' tab on the left.
+2. Click the 'Environments' tab on the left.
 
-Click the 'Import' button at the bottom.
+3. Click the 'Import' button at the bottom.
 
-Click the folder button next to "Specification File'. Choose the environment.yml. That's in the whatsapp_scraper_master directory.
+4. Click the folder button next to "Specification File'. Choose the environment.yml. That's in the whatsapp_scraper_master directory.
 
-Click 'Import'
+5. Click 'Import'
 
-Once the environment is imported it will appear in the list of environments. It will be called 'whatsapp-conda-env'
+6. Once the environment is imported it will appear in the list of environments. It will be called 'whatsapp-conda-env'
 
 ### **4. Running the Script.**
 
-Click the play button next to the 'whatsapp-conda-env' environment, and choose 'Open Terminal'.
+1. Click the play button next to the 'whatsapp-conda-env' environment, and choose 'Open Terminal'.
 
-In the terminal type 
+2. In the terminal type - 
 
 `cd Documents`
+
+then
+
 `cd whatsapp-scraper-master`
+
+then
+
 `whatsapp_scraper.py` or `python whatsapp_scraper.py`
 
 The script will run, creating a new directory for each chat txt file, inside it is the original .txt file along with a sorted .csv file.
@@ -61,11 +67,11 @@ To import the data in to Excel -
 
 ### **Re-running the script in the future.**
 
-Open 'Anaconda Navigator'
+1. Open 'Anaconda Navigator'
 
-Click the 'Environments' tab on the left.
+2. Click the 'Environments' tab on the left.
 
-Repeat the steps in **4. Running the Script.**
+3. Repeat the steps in **4. Running the Script.**
 
 ## Experienced User Set-up
 
