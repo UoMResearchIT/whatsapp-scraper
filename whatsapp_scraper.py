@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+import sys
 import os
 import shutil
 import csv
@@ -8,9 +9,20 @@ import datetime
 
 # Get current working directory
 cwd = os.getcwd()
+checklist = os.listdir(cwd)
+
+# Checks to see how many text files there are. If there's only one 
+# the script is stopped
+text_list = []
+for filename in checklist:
+    if filename.endswith(".txt") == 1:
+        text_list.append(filename)
+if len(text_list) == 1:
+    print('No are no WhatsApp .txt files')
+    sys.exit()
 
 # loop over all files in CWD
-for filename in os.listdir(cwd):
+for filename in checklist:
     
     # search for all text files that aren't the requirements file
     if filename != ("requirements.txt") and filename.endswith(".txt"):
