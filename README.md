@@ -50,13 +50,13 @@ then
 
 then
 
-`whatsapp_scraper.py` or `python whatsapp_scraper.py`
+`python whatsapp_scraper.py`
 
 The script will run, creating a new directory for each chat txt file, inside it is the original .txt file along with a sorted .csv file.
 
 ### **5. Importing into Excel**
 
-To import the data in to Excel -
+To import the data in to Excel 365 -
 
 1. Open Excel,
 2. Click the 'Data' panel.
@@ -64,6 +64,16 @@ To import the data in to Excel -
 4. Choose the .csv you want to import,
 5. Set 'File Origin" to '--None--' (at the top of the list), 'Delimiter' to 'Comma', Data Type Detection to 'Based on entire dataset'
 6. Click 'Load'. The data will now be imported to the open worksheet.
+
+To import the data in to Excel 2016 -
+
+1. Open Excel,
+2. Click the 'Data' panel.
+3. Click 'New Query'
+4. Click 'From File', then 'From CSV'
+5. Choose the .csv you want to import,
+6. Set 'File Origin" to '--None--' (at the top of the list), 'Delimiter' to 'Comma', Data Type Detection to 'Based on entire dataset'
+7. Click 'Load'. The data will now be imported to the open worksheet.
 
 ### **Re-running the script in the future.**
 
